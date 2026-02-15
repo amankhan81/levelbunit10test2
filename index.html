@@ -105,6 +105,8 @@
             text-align: center;
         }
 
+        input::placeholder { color: rgba(0, 243, 255, 0.3); }
+
         .btn {
             background: transparent;
             border: 3px solid var(--magenta);
@@ -367,7 +369,7 @@
                 const target = vocabulary[Math.floor(Math.random() * vocabulary.length)];
                 const type = Math.random() > 0.5 ? 'MCQ' : 'TF';
                 
-                let q = { word: target.w };
+                let q = { w: target.w }; // Store the word in property 'w' to match source
                 if(type === 'MCQ') {
                     q.text = `Which definition fits the word: "${target.w.toUpperCase()}"?`;
                     q.correct = target.d;
@@ -375,7 +377,7 @@
                 } else {
                     const coin = Math.random() > 0.5;
                     const displayDef = coin ? target.d : vocabulary[Math.floor(Math.random()*vocabulary.length)].d;
-                    q.text = `TRUE or FALSE: "${target.word.toUpperCase()}" means "${displayDef}"?`;
+                    q.text = `TRUE or FALSE: "${target.w.toUpperCase()}" means "${displayDef}"?`;
                     q.correct = coin ? "True" : "False";
                     q.options = ["True", "False"];
                 }
@@ -394,7 +396,10 @@
             userLName = document.getElementById('input-lname').value.trim();
             userClass = document.getElementById('input-class').value.trim();
 
-            if(!userFName || !userLName || !userClass) return;
+            if(!userFName || !userLName || !userClass) {
+                alert("Please fill in your name and class/section to begin.");
+                return;
+            }
 
             generateQuiz();
             showScreen('quiz-screen');
@@ -447,7 +452,10 @@
 
         function playSound(id) {
             const s = document.getElementById(id);
-            if(s) { s.currentTime = 0; s.play().catch(() => {}); }
+            if(s) { 
+                s.currentTime = 0; 
+                s.play().catch(e => console.log("Audio playback error: ", e)); 
+            }
         }
 
         function moveQuestion(dir) {
@@ -483,17 +491,16 @@
         }
 
         function toggleFS() {
-            if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(e => console.log(e));
             else if (document.exitFullscreen) document.exitFullscreen();
         }
 
         function captureScreen() {
             const target = document.getElementById('app-container');
-            // Hide UI during capture
             const overlays = [document.querySelector('.creator-tag'), document.querySelector('.fs-btn'), document.querySelector('.camera-btn')];
             overlays.forEach(o => o.style.visibility = 'hidden');
 
-            html2canvas(target, { backgroundColor: '#0a0a0c' }).then(canvas => {
+            html2canvas(target, { backgroundColor: '#0a0a0c', useCORS: true }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = `Result_${userFName}.png`;
                 link.href = canvas.toDataURL("image/png");
