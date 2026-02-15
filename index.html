@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Unit 10 Quiz </title>
+    <title>Level B Unit 10 Vocabulary Quiz</title>
     <!-- html2canvas for screenshot functionality -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
@@ -30,8 +30,8 @@
             background-color: var(--dark-bg);
             color: #fff;
             font-family: 'Rajdhani', sans-serif;
-            font-size: 24pt; /* Mandatory 24pt font */
-            overflow: hidden; /* Prevents scrollbars */
+            font-size: 24pt; /* Global 24pt visibility */
+            overflow: hidden; /* Locked to window */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -57,13 +57,12 @@
             display: none;
             width: 90%;
             max-width: 1200px;
-            height: 80vh; /* Constraints height to fit window */
+            height: 85vh; 
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
             animation: fadeIn 0.4s ease-out;
-            overflow-y: auto; /* Fallback for very small heights */
         }
 
         .active { display: flex; }
@@ -73,33 +72,31 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Neon Text & Titles */
+        /* Titles and Typography */
         .neon-title {
             font-family: 'Orbitron', sans-serif;
-            font-size: 4rem;
+            font-size: 24pt; /* Explicitly 24pt as requested */
             color: #fff;
-            text-shadow: 0 0 10px var(--magenta), 0 0 20px var(--magenta), 0 0 40px var(--magenta);
-            margin: 0 0 3vh 0;
+            text-shadow: 0 0 10px var(--magenta), 0 0 20px var(--magenta);
+            margin: 0 0 4vh 0;
             text-transform: uppercase;
-            line-height: 1;
         }
 
         .neon-border-box {
             border: 3px solid var(--lime);
-            padding: 2.5vh;
+            padding: 30px;
             box-shadow: 0 0 15px var(--lime);
             background: rgba(0,0,0,0.7);
             width: 100%;
             max-width: 600px;
         }
 
-        /* Inputs */
         input {
             background: transparent;
             border: 2px solid var(--cyan);
             color: var(--cyan);
             font-family: 'Orbitron', sans-serif;
-            font-size: 22pt;
+            font-size: 20pt;
             padding: 12px;
             margin: 10px 0;
             width: 100%;
@@ -108,28 +105,23 @@
             text-align: center;
         }
 
-        input::placeholder { color: rgba(0, 243, 255, 0.3); }
-
-        /* Buttons */
         .btn {
             background: transparent;
             border: 3px solid var(--magenta);
             color: var(--magenta);
-            padding: 1.5vh 4vw;
-            font-size: 30pt;
+            padding: 15px 45px;
+            font-size: 24pt;
             font-family: 'Orbitron', sans-serif;
             cursor: pointer;
-            margin-top: 4vh;
+            margin-top: 5vh;
             text-shadow: 0 0 5px var(--magenta);
             box-shadow: 0 0 15px var(--magenta);
             transition: 0.3s;
-            text-transform: uppercase;
         }
 
         .btn:hover {
             background: var(--magenta);
             color: #000;
-            box-shadow: 0 0 30px var(--magenta);
         }
 
         /* Navigation Arrows */
@@ -137,25 +129,24 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 70pt;
+            font-size: 80pt;
             color: var(--cyan);
             text-shadow: 0 0 25px var(--cyan);
             cursor: pointer;
             z-index: 100;
-            transition: 0.2s;
             padding: 20px;
+            transition: 0.2s;
         }
         .nav-arrow:hover { 
             color: var(--magenta); 
             text-shadow: 0 0 30px var(--magenta);
-            transform: translateY(-50%) scale(1.1);
         }
-        #prev-arrow { left: 2vw; }
-        #next-arrow { right: 2vw; }
+        #prev-arrow { left: 1vw; }
+        #next-arrow { right: 1vw; }
 
-        /* Question Styles */
+        /* Quiz Logic UI */
         .question-text {
-            margin-bottom: 4vh;
+            margin-bottom: 5vh;
             color: var(--lime);
             text-shadow: 0 0 10px var(--lime);
             font-weight: 700;
@@ -165,51 +156,54 @@
         .options-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 2vh;
+            gap: 20px;
             width: 100%;
             max-width: 1000px;
         }
 
         .option {
-            padding: 2.5vh;
+            padding: 25px;
             border: 3px solid var(--cyan);
             cursor: pointer;
+            background: rgba(0,0,0,0.5);
             transition: 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(0,0,0,0.4);
-            font-weight: 500;
         }
 
-        .option:hover { 
-            background: rgba(0, 243, 255, 0.15); 
-            border-color: var(--magenta);
-            box-shadow: 0 0 15px var(--magenta);
-        }
-        .option.selected { 
-            background: var(--cyan); 
-            color: #000; 
-            box-shadow: 0 0 25px var(--cyan);
-            border-color: #fff;
+        .option.disabled { cursor: default; }
+
+        /* Selection/Reveal States */
+        .option.correct-reveal {
+            background: var(--lime) !important;
+            color: #000 !important;
+            border-color: #fff !important;
+            box-shadow: 0 0 30px var(--lime);
         }
 
-        /* Results Slide Dashboard */
+        .option.wrong-reveal {
+            background: var(--magenta) !important;
+            color: #000 !important;
+            border-color: #fff !important;
+            box-shadow: 0 0 30px var(--magenta);
+        }
+
+        /* Results Dashboard */
         .result-dashboard {
             width: 100%;
             max-width: 900px;
-            padding: 5vh;
+            padding: 40px;
             border: 5px solid var(--magenta);
             box-shadow: 0 0 40px var(--magenta);
-            background: rgba(0,0,0,0.8);
-            position: relative;
+            background: rgba(0,0,0,0.9);
         }
 
         .score-bar-container {
             width: 100%;
             height: 50px;
             background: rgba(255,255,255,0.05);
-            margin: 4vh 0 2vh 0;
+            margin: 30px 0;
             border: 3px solid var(--lime);
             position: relative;
             overflow: hidden;
@@ -220,100 +214,82 @@
             background: var(--lime);
             box-shadow: 0 0 25px var(--lime);
             width: 0%;
-            transition: width 1.5s cubic-bezier(0.1, 0, 0.1, 1);
+            transition: width 1.5s ease-out;
         }
 
-        /* Utility Elements */
+        /* Fixed Overlays */
         .fs-btn {
             position: absolute;
             bottom: 20px;
             left: 20px;
             color: var(--yellow);
-            font-size: 12pt;
+            font-size: 14pt;
             cursor: pointer;
             text-shadow: 0 0 8px var(--yellow);
-            background: rgba(0,0,0,0.5);
             border: 2px solid var(--yellow);
             padding: 8px 15px;
+            background: none;
             font-family: 'Orbitron', sans-serif;
-            z-index: 200;
         }
 
         .creator-tag {
             position: absolute;
             bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
+            right: 20px;
             color: var(--yellow);
-            font-size: 12pt;
-            text-shadow: 0 0 5px var(--yellow);
+            font-size: 14pt; /* Explicitly 14pt */
+            text-shadow: 0 0 10px var(--yellow);
             z-index: 200;
+            font-family: 'Rajdhani', sans-serif;
         }
 
         .current-date {
             position: absolute;
-            bottom: 50px; /* Shifted up slightly from corner */
-            left: 20px;
+            bottom: 20px; 
+            left: 50%;
+            transform: translateX(-50%);
             font-size: 12pt;
             color: #888;
-            z-index: 200;
         }
 
-        .screen-capture-btn {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            cursor: pointer;
-            background: transparent;
-            border: none;
+        .camera-btn {
             font-size: 50pt;
             color: var(--cyan);
             text-shadow: 0 0 15px var(--cyan);
-            z-index: 200;
+            cursor: pointer;
+            background: none;
+            border: none;
             transition: 0.3s;
         }
-        .screen-capture-btn:hover {
-            transform: scale(1.1);
-            color: var(--magenta);
-        }
+        .camera-btn:hover { transform: scale(1.1); color: var(--magenta); }
 
         .trophy {
             font-size: 100pt;
             color: gold;
             text-shadow: 0 0 40px gold;
-            margin-bottom: 5px;
-            line-height: 1;
+            margin-bottom: 10px;
         }
 
         .remark {
-            font-size: 40pt;
+            font-size: 36pt;
             color: var(--lime);
             text-shadow: 0 0 15px var(--lime);
             font-family: 'Orbitron', sans-serif;
-            margin-bottom: 2vh;
-        }
-
-        /* Responsive adjustments for tiny heights */
-        @media (max-height: 700px) {
-            .neon-title { font-size: 2.5rem; }
-            .btn { font-size: 22pt; }
-            .option { padding: 1.5vh; font-size: 18pt; }
-            .question-text { font-size: 20pt; margin-bottom: 2vh; }
         }
     </style>
 </head>
 <body>
 
     <div id="app-container">
-        <!-- Audio Elements -->
+        <!-- Audio -->
         <audio id="sound-correct" src="correct.mp3" preload="auto"></audio>
         <audio id="sound-wrong" src="wrong.mp3" preload="auto"></audio>
 
-        <!-- Navigation Arrows -->
+        <!-- Nav Arrows -->
         <div id="prev-arrow" class="nav-arrow" onclick="moveQuestion(-1)" style="display:none;">&#10094;</div>
         <div id="next-arrow" class="nav-arrow" onclick="moveQuestion(1)" style="display:none;">&#10095;</div>
 
-        <!-- Intro Slide -->
+        <!-- Intro -->
         <div id="intro-screen" class="screen active">
             <h1 class="neon-title">Level B Unit 10</h1>
             <div class="neon-border-box">
@@ -324,40 +300,40 @@
             <button class="btn" onclick="startQuiz()">START QUIZ</button>
         </div>
 
-        <!-- Quiz Slide -->
+        <!-- Quiz -->
         <div id="quiz-screen" class="screen">
-            <div id="q-counter" style="color: var(--magenta); margin-bottom: 2vh; font-family: 'Orbitron';">QUESTION 01 / 25</div>
-            <div id="q-text" class="question-text">Loading question...</div>
-            <div id="options-container" class="options-grid">
-                <!-- Options injected by JS -->
-            </div>
+            <div id="q-counter" style="color: var(--magenta); font-family: 'Orbitron'; font-size: 20pt; margin-bottom: 2vh;">QUESTION 01 / 25</div>
+            <div id="q-text" class="question-text">Loading...</div>
+            <div id="options-container" class="options-grid"></div>
         </div>
 
-        <!-- Result Slide -->
+        <!-- Results -->
         <div id="result-screen" class="screen">
-            <div class="result-dashboard" id="final-dashboard">
-                <h2 style="font-family: 'Orbitron'; color: var(--cyan); margin: 0; font-size: 28pt;">LEVEL B UNIT 10 VOCABULARY</h2>
-                <div id="student-display" style="margin: 3vh 0; color: #fff; font-size: 32pt; border-bottom: 1px solid var(--cyan); padding-bottom: 1vh;">[NAME] | [CLASS]</div>
+            <div class="result-dashboard" id="result-card">
+                <h2 style="font-family: 'Orbitron'; color: var(--cyan); font-size: 24pt;">LEVEL B UNIT 10 VOCABULARY</h2>
+                <div id="student-display" style="margin: 20px 0; font-size: 32pt;">[NAME] | [CLASS]</div>
                 
                 <div id="reward-area"></div>
                 
                 <div class="score-bar-container">
                     <div id="score-fill" class="score-bar-fill"></div>
                 </div>
-                <div id="score-text" style="color: var(--lime); font-family: 'Orbitron'; font-size: 30pt;">SCORE: 0%</div>
+                <div id="score-text" style="color: var(--lime); font-family: 'Orbitron'; font-size: 28pt;">SCORE: 0%</div>
             </div>
-
-            <div class="current-date" id="date-display"></div>
-            <div class="creator-tag">Created by Amanullah Khan</div>
-            <button class="screen-capture-btn" title="Screen Capture" onclick="captureScreen()">📸</button>
+            
+            <div style="margin-top: 30px;">
+                <button class="camera-btn" onclick="captureScreen()">📸</button>
+            </div>
         </div>
 
-        <!-- Fullscreen Button -->
+        <!-- Shared Overlays -->
         <button class="fs-btn" onclick="toggleFS()">FULL SCREEN</button>
+        <div class="current-date" id="date-display"></div>
+        <div class="creator-tag">Created by: Amanullah Khan</div>
     </div>
 
     <script>
-        const words = [
+        const vocabulary = [
             { w: "bellow", d: "to roar; a deep, loud roar" },
             { w: "beneficiary", d: "one who receives benefits" },
             { w: "botch", d: "to ruin through clumsiness" },
@@ -380,70 +356,51 @@
             { w: "veto", d: "the power to forbid or prevent" }
         ];
 
-        let quizData = [];
-        let currentQIndex = 0;
-        let userAnswers = {}; 
-        let studentName = "";
-        let studentClass = "";
+        let quizQuestions = [];
+        let currentIndex = 0;
+        let responses = {}; 
+        let userFName = "", userLName = "", userClass = "";
 
-        function initQuizData() {
-            quizData = [];
-            const types = ["MCQ", "TF", "Usage"];
+        function generateQuiz() {
+            quizQuestions = [];
             for(let i=0; i<25; i++) {
-                const wordObj = words[Math.floor(Math.random() * words.length)];
-                const type = types[Math.floor(Math.random() * types.length)];
+                const target = vocabulary[Math.floor(Math.random() * vocabulary.length)];
+                const type = Math.random() > 0.5 ? 'MCQ' : 'TF';
                 
-                let q = { word: wordObj.w };
-
-                if (type === "MCQ") {
-                    q.text = `Select the correct definition for: "${wordObj.w.toUpperCase()}"`;
-                    q.options = shuffle([wordObj.d, ...getRandomDefs(3, wordObj.d)]);
-                    q.correct = wordObj.d;
-                } else if (type === "TF") {
-                    const isCorrect = Math.random() > 0.5;
-                    const displayDef = isCorrect ? wordObj.d : words[Math.floor(Math.random()*words.length)].d;
-                    q.text = `TRUE or FALSE: "${wordObj.w.toUpperCase()}" means "${displayDef}"?`;
-                    q.options = ["True", "False"];
-                    q.correct = isCorrect ? "True" : "False";
+                let q = { word: target.w };
+                if(type === 'MCQ') {
+                    q.text = `Which definition fits the word: "${target.w.toUpperCase()}"?`;
+                    q.correct = target.d;
+                    q.options = shuffle([target.d, ...getWrongDefs(3, target.d)]);
                 } else {
-                    q.text = `Complete the sentence: "The _____ behavior of the criminal made him famous in the city."`;
-                    q.options = shuffle([wordObj.w, ...getRandomWords(3, wordObj.w)]);
-                    q.correct = wordObj.w;
-                    // Adjust specific sentences based on words if needed, here we use wordObj.w as fallback
-                    if(wordObj.w === 'notorious') q.text = `Which word describes someone widely known for bad conduct?`;
+                    const coin = Math.random() > 0.5;
+                    const displayDef = coin ? target.d : vocabulary[Math.floor(Math.random()*vocabulary.length)].d;
+                    q.text = `TRUE or FALSE: "${target.word.toUpperCase()}" means "${displayDef}"?`;
+                    q.correct = coin ? "True" : "False";
+                    q.options = ["True", "False"];
                 }
-                quizData.push(q);
+                quizQuestions.push(q);
             }
         }
 
-        function getRandomDefs(count, exclude) {
-            return words.filter(x => x.d !== exclude).sort(() => 0.5 - Math.random()).slice(0, count).map(x => x.d);
+        function getWrongDefs(count, exclude) {
+            return vocabulary.filter(x => x.d !== exclude).sort(() => 0.5 - Math.random()).slice(0, count).map(x => x.d);
         }
 
-        function getRandomWords(count, exclude) {
-            return words.filter(x => x.w !== exclude).sort(() => 0.5 - Math.random()).slice(0, count).map(x => x.w);
-        }
-
-        function shuffle(arr) {
-            return arr.sort(() => 0.5 - Math.random());
-        }
+        function shuffle(arr) { return arr.sort(() => 0.5 - Math.random()); }
 
         function startQuiz() {
-            const fn = document.getElementById('input-fname').value.trim();
-            const ln = document.getElementById('input-lname').value.trim();
-            const cls = document.getElementById('input-class').value.trim();
+            userFName = document.getElementById('input-fname').value.trim();
+            userLName = document.getElementById('input-lname').value.trim();
+            userClass = document.getElementById('input-class').value.trim();
 
-            if(!fn || !ln || !cls) {
-                return; // Simple validation
-            }
+            if(!userFName || !userLName || !userClass) return;
 
-            studentName = `${fn} ${ln}`;
-            studentClass = cls;
-
-            initQuizData();
+            generateQuiz();
             showScreen('quiz-screen');
             document.getElementById('prev-arrow').style.display = 'block';
             document.getElementById('next-arrow').style.display = 'block';
+            document.getElementById('date-display').innerText = new Date().toLocaleDateString();
             renderQuestion();
         }
 
@@ -453,8 +410,10 @@
         }
 
         function renderQuestion() {
-            const q = quizData[currentQIndex];
-            document.getElementById('q-counter').innerText = `QUESTION ${String(currentQIndex + 1).padStart(2, '0')} / 25`;
+            const q = quizQuestions[currentIndex];
+            const answered = responses[currentIndex] !== undefined;
+            
+            document.getElementById('q-counter').innerText = `QUESTION ${String(currentIndex + 1).padStart(2, '0')} / 25`;
             document.getElementById('q-text').innerText = q.text;
             
             const container = document.getElementById('options-container');
@@ -463,108 +422,83 @@
             q.options.forEach(opt => {
                 const div = document.createElement('div');
                 div.className = 'option';
-                if(userAnswers[currentQIndex] === opt) div.classList.add('selected');
+                if(answered) {
+                    div.classList.add('disabled');
+                    if(opt === q.correct) div.classList.add('correct-reveal');
+                    else if(opt === responses[currentIndex]) div.classList.add('wrong-reveal');
+                } else {
+                    div.onclick = () => handleChoice(opt);
+                }
                 div.innerText = opt;
-                div.onclick = () => selectOption(opt);
                 container.appendChild(div);
             });
         }
 
-        function selectOption(opt) {
-            const q = quizData[currentQIndex];
-            const prevAns = userAnswers[currentQIndex];
-            userAnswers[currentQIndex] = opt;
+        function handleChoice(opt) {
+            if(responses[currentIndex] !== undefined) return;
+            const q = quizQuestions[currentIndex];
+            responses[currentIndex] = opt;
             
-            if (opt === q.correct) {
-                playSound('sound-correct');
-            } else {
-                playSound('sound-wrong');
-            }
-
+            if(opt === q.correct) playSound('sound-correct');
+            else playSound('sound-wrong');
+            
             renderQuestion();
-            
-            if(!prevAns) {
-                setTimeout(() => moveQuestion(1), 600);
-            }
         }
 
         function playSound(id) {
             const s = document.getElementById(id);
-            if(s) {
-                s.currentTime = 0;
-                s.play().catch(() => {});
-            }
+            if(s) { s.currentTime = 0; s.play().catch(() => {}); }
         }
 
         function moveQuestion(dir) {
-            if(dir === 1 && currentQIndex === 24) {
-                finishQuiz();
+            if(dir === 1 && currentIndex === 24) {
+                showResults();
                 return;
             }
-            
-            currentQIndex += dir;
-            if(currentQIndex < 0) currentQIndex = 0;
-            if(currentQIndex > 24) currentQIndex = 24;
-            
+            currentIndex += dir;
+            if(currentIndex < 0) currentIndex = 0;
+            if(currentIndex > 24) currentIndex = 24;
             renderQuestion();
         }
 
-        function finishQuiz() {
+        function showResults() {
             document.getElementById('prev-arrow').style.display = 'none';
             document.getElementById('next-arrow').style.display = 'none';
             
             let score = 0;
-            quizData.forEach((q, idx) => {
-                if(userAnswers[idx] === q.correct) score++;
-            });
+            quizQuestions.forEach((q, i) => { if(responses[i] === q.correct) score++; });
+            const pct = Math.round((score / 25) * 100);
 
-            const percent = Math.round((score / 25) * 100);
-            
             showScreen('result-screen');
+            document.getElementById('student-display').innerText = `${userFName.toUpperCase()} ${userLName.toUpperCase()} | ${userClass.toUpperCase()}`;
+            document.getElementById('score-text').innerText = `SCORE: ${pct}%`;
             
-            document.getElementById('student-display').innerText = `${studentName.toUpperCase()} | ${studentClass.toUpperCase()}`;
-            document.getElementById('date-display').innerText = new Date().toLocaleDateString('en-US', { 
-                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
-            });
-            document.getElementById('score-text').innerText = `SCORE: ${percent}%`;
-            
-            const rewardArea = document.getElementById('reward-area');
-            rewardArea.innerHTML = '';
-            if(percent >= 90) {
-                rewardArea.innerHTML = `
-                    <div class="trophy">🏆</div>
-                    <div class="remark">EXQUISITE WORK</div>
-                `;
+            const reward = document.getElementById('reward-area');
+            reward.innerHTML = '';
+            if(pct >= 90) {
+                reward.innerHTML = `<div class="trophy">🏆</div><div class="remark">EXQUISITE WORK</div>`;
             }
 
-            setTimeout(() => {
-                document.getElementById('score-fill').style.width = percent + '%';
-            }, 300);
+            setTimeout(() => { document.getElementById('score-fill').style.width = pct + '%'; }, 300);
         }
 
         function toggleFS() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen();
-            } else if (document.exitFullscreen) {
-                document.exitFullscreen();
-            }
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+            else if (document.exitFullscreen) document.exitFullscreen();
         }
 
         function captureScreen() {
             const target = document.getElementById('app-container');
-            // Hide camera icon during capture
-            const camBtn = document.querySelector('.screen-capture-btn');
-            const fsBtn = document.querySelector('.fs-btn');
-            camBtn.style.visibility = 'hidden';
-            fsBtn.style.visibility = 'hidden';
+            // Hide UI during capture
+            const overlays = [document.querySelector('.creator-tag'), document.querySelector('.fs-btn'), document.querySelector('.camera-btn')];
+            overlays.forEach(o => o.style.visibility = 'hidden');
 
             html2canvas(target, { backgroundColor: '#0a0a0c' }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = `Result_${studentName.replace(/\s+/g, '_')}.png`;
+                link.download = `Result_${userFName}.png`;
                 link.href = canvas.toDataURL("image/png");
                 link.click();
-                camBtn.style.visibility = 'visible';
-                fsBtn.style.visibility = 'visible';
+                overlays.forEach(o => o.style.visibility = 'visible');
             });
         }
     </script>
