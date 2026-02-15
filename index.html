@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level B Unit 10 Vocabulary Quiz</title>
+    <!-- html2canvas for screenshot functionality -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap');
+
+        :root {
+            --cyan: #00f3ff;
+            --magenta: #ff00ff;
+            --lime: #39ff14;
+            --yellow: #fff200;
+            --dark-bg: #0a0a0c;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: var(--dark-bg);
+            color: #fff;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 24pt; /* Mandatory 24pt font */
+            overflow: hidden; /* Prevents scrollbars */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #app-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 10px solid var(--cyan);
+            box-shadow: inset 0 0 30px var(--cyan), 0 0 40px var(--cyan);
+            background-image: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), 
+                              url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+            padding: 2vh;
+        }
+
+        /* Screens */
+        .screen {
+            display: none;
+            width: 90%;
+            max-width: 1200px;
+            height: 80vh; /* Constraints height to fit window */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            animation: fadeIn 0.4s ease-out;
+            overflow-y: auto; /* Fallback for very small heights */
+        }
+
+        .active { display: flex; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Neon Text & Titles */
+        .neon-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            color: #fff;
+            text-shadow: 0 0 10px var(--magenta), 0 0 20px var(--magenta), 0 0 40px var(--magenta);
+            margin: 0 0 3vh 0;
+            text-transform: uppercase;
+            line-height: 1;
+        }
+
+        .neon-border-box {
+            border: 3px solid var(--lime);
+            padding: 2.5vh;
+            box-shadow: 0 0 15px var(--lime);
+            background: rgba(0,0,0,0.7);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        /* Inputs */
+        input {
+            background: transparent;
+            border: 2px solid var(--cyan);
+            color: var(--cyan);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 22pt;
+            padding: 12px;
+            margin: 10px 0;
+            width: 100%;
+            outline: none;
+            box-shadow: 0 0 10px var(--cyan);
+            text-align: center;
+        }
+
+        input::placeholder { color: rgba(0, 243, 255, 0.3); }
+
+        /* Buttons */
+        .btn {
+            background: transparent;
+            border: 3px solid var(--magenta);
+            color: var(--magenta);
+            padding: 1.5vh 4vw;
+            font-size: 30pt;
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            margin-top: 4vh;
+            text-shadow: 0 0 5px var(--magenta);
+            box-shadow: 0 0 15px var(--magenta);
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        .btn:hover {
+            background: var(--magenta);
+            color: #000;
+            box-shadow: 0 0 30px var(--magenta);
+        }
+
+        /* Navigation Arrows */
+        .nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 70pt;
+            color: var(--cyan);
+            text-shadow: 0 0 25px var(--cyan);
+            cursor: pointer;
+            z-index: 100;
+            transition: 0.2s;
+            padding: 20px;
+        }
+        .nav-arrow:hover { 
+            color: var(--magenta); 
+            text-shadow: 0 0 30px var(--magenta);
+            transform: translateY(-50%) scale(1.1);
+        }
+        #prev-arrow { left: 2vw; }
+        #next-arrow { right: 2vw; }
+
+        /* Question Styles */
+        .question-text {
+            margin-bottom: 4vh;
+            color: var(--lime);
+            text-shadow: 0 0 10px var(--lime);
+            font-weight: 700;
+            max-width: 900px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2vh;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .option {
+            padding: 2.5vh;
+            border: 3px solid var(--cyan);
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.4);
+            font-weight: 500;
+        }
+
+        .option:hover { 
+            background: rgba(0, 243, 255, 0.15); 
+            border-color: var(--magenta);
+            box-shadow: 0 0 15px var(--magenta);
+        }
+        .option.selected { 
+            background: var(--cyan); 
+            color: #000; 
+            box-shadow: 0 0 25px var(--cyan);
+            border-color: #fff;
+        }
+
+        /* Results Slide Dashboard */
+        .result-dashboard {
+            width: 100%;
+            max-width: 900px;
+            padding: 5vh;
+            border: 5px solid var(--magenta);
+            box-shadow: 0 0 40px var(--magenta);
+            background: rgba(0,0,0,0.8);
+            position: relative;
+        }
+
+        .score-bar-container {
+            width: 100%;
+            height: 50px;
+            background: rgba(255,255,255,0.05);
+            margin: 4vh 0 2vh 0;
+            border: 3px solid var(--lime);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .score-bar-fill {
+            height: 100%;
+            background: var(--lime);
+            box-shadow: 0 0 25px var(--lime);
+            width: 0%;
+            transition: width 1.5s cubic-bezier(0.1, 0, 0.1, 1);
+        }
+
+        /* Utility Elements */
+        .fs-btn {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: var(--yellow);
+            font-size: 12pt;
+            cursor: pointer;
+            text-shadow: 0 0 8px var(--yellow);
+            background: rgba(0,0,0,0.5);
+            border: 2px solid var(--yellow);
+            padding: 8px 15px;
+            font-family: 'Orbitron', sans-serif;
+            z-index: 200;
+        }
+
+        .creator-tag {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--yellow);
+            font-size: 12pt;
+            text-shadow: 0 0 5px var(--yellow);
+            z-index: 200;
+        }
+
+        .current-date {
+            position: absolute;
+            bottom: 50px; /* Shifted up slightly from corner */
+            left: 20px;
+            font-size: 12pt;
+            color: #888;
+            z-index: 200;
+        }
+
+        .screen-capture-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            font-size: 50pt;
+            color: var(--cyan);
+            text-shadow: 0 0 15px var(--cyan);
+            z-index: 200;
+            transition: 0.3s;
+        }
+        .screen-capture-btn:hover {
+            transform: scale(1.1);
+            color: var(--magenta);
+        }
+
+        .trophy {
+            font-size: 100pt;
+            color: gold;
+            text-shadow: 0 0 40px gold;
+            margin-bottom: 5px;
+            line-height: 1;
+        }
+
+        .remark {
+            font-size: 40pt;
+            color: var(--lime);
+            text-shadow: 0 0 15px var(--lime);
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 2vh;
+        }
+
+        /* Responsive adjustments for tiny heights */
+        @media (max-height: 700px) {
+            .neon-title { font-size: 2.5rem; }
+            .btn { font-size: 22pt; }
+            .option { padding: 1.5vh; font-size: 18pt; }
+            .question-text { font-size: 20pt; margin-bottom: 2vh; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app-container">
+        <!-- Audio Elements -->
+        <audio id="sound-correct" src="correct.mp3" preload="auto"></audio>
+        <audio id="sound-wrong" src="wrong.mp3" preload="auto"></audio>
+
+        <!-- Navigation Arrows -->
+        <div id="prev-arrow" class="nav-arrow" onclick="moveQuestion(-1)" style="display:none;">&#10094;</div>
+        <div id="next-arrow" class="nav-arrow" onclick="moveQuestion(1)" style="display:none;">&#10095;</div>
+
+        <!-- Intro Slide -->
+        <div id="intro-screen" class="screen active">
+            <h1 class="neon-title">Level B Unit 10</h1>
+            <div class="neon-border-box">
+                <input type="text" id="input-fname" placeholder="FIRST NAME">
+                <input type="text" id="input-lname" placeholder="LAST NAME">
+                <input type="text" id="input-class" placeholder="CLASS / SECTION">
+            </div>
+            <button class="btn" onclick="startQuiz()">START QUIZ</button>
+        </div>
+
+        <!-- Quiz Slide -->
+        <div id="quiz-screen" class="screen">
+            <div id="q-counter" style="color: var(--magenta); margin-bottom: 2vh; font-family: 'Orbitron';">QUESTION 01 / 25</div>
+            <div id="q-text" class="question-text">Loading question...</div>
+            <div id="options-container" class="options-grid">
+                <!-- Options injected by JS -->
+            </div>
+        </div>
+
+        <!-- Result Slide -->
+        <div id="result-screen" class="screen">
+            <div class="result-dashboard" id="final-dashboard">
+                <h2 style="font-family: 'Orbitron'; color: var(--cyan); margin: 0; font-size: 28pt;">LEVEL B UNIT 10 VOCABULARY</h2>
+                <div id="student-display" style="margin: 3vh 0; color: #fff; font-size: 32pt; border-bottom: 1px solid var(--cyan); padding-bottom: 1vh;">[NAME] | [CLASS]</div>
+                
+                <div id="reward-area"></div>
+                
+                <div class="score-bar-container">
+                    <div id="score-fill" class="score-bar-fill"></div>
+                </div>
+                <div id="score-text" style="color: var(--lime); font-family: 'Orbitron'; font-size: 30pt;">SCORE: 0%</div>
+            </div>
+
+            <div class="current-date" id="date-display"></div>
+            <div class="creator-tag">Created by Amanullah Khan</div>
+            <button class="screen-capture-btn" title="Screen Capture" onclick="captureScreen()">📸</button>
+        </div>
+
+        <!-- Fullscreen Button -->
+        <button class="fs-btn" onclick="toggleFS()">FULL SCREEN</button>
+    </div>
+
+    <script>
+        const words = [
+            { w: "bellow", d: "to roar; a deep, loud roar" },
+            { w: "beneficiary", d: "one who receives benefits" },
+            { w: "botch", d: "to ruin through clumsiness" },
+            { w: "clutter", d: "to fill or cover in a disorderly way" },
+            { w: "dilapidated", d: "falling apart or ruined, run-down" },
+            { w: "dismantle", d: "to take apart; to strip of something" },
+            { w: "farce", d: "a play filled with ridiculous happenings" },
+            { w: "futile", d: "not successful, useless" },
+            { w: "grueling", d: "very tiring, calling for extreme effort" },
+            { w: "hospitable", d: "offering friendly or generous treatment" },
+            { w: "lair", d: "the home or den of a wild animal" },
+            { w: "lavish", d: "overly generous, extravagant" },
+            { w: "morbid", d: "in an unhealthy mental state; extremely gloomy" },
+            { w: "notorious", d: "widely known because of bad conduct" },
+            { w: "pamper", d: "to allow too many privileges" },
+            { w: "parasite", d: "an organism that lives on or in another" },
+            { w: "shirk", d: "to avoid or get out of doing work" },
+            { w: "surplus", d: "an amount beyond what is required" },
+            { w: "timidity", d: "the state of being easily frightened" },
+            { w: "veto", d: "the power to forbid or prevent" }
+        ];
+
+        let quizData = [];
+        let currentQIndex = 0;
+        let userAnswers = {}; 
+        let studentName = "";
+        let studentClass = "";
+
+        function initQuizData() {
+            quizData = [];
+            const types = ["MCQ", "TF", "Usage"];
+            for(let i=0; i<25; i++) {
+                const wordObj = words[Math.floor(Math.random() * words.length)];
+                const type = types[Math.floor(Math.random() * types.length)];
+                
+                let q = { word: wordObj.w };
+
+                if (type === "MCQ") {
+                    q.text = `Select the correct definition for: "${wordObj.w.toUpperCase()}"`;
+                    q.options = shuffle([wordObj.d, ...getRandomDefs(3, wordObj.d)]);
+                    q.correct = wordObj.d;
+                } else if (type === "TF") {
+                    const isCorrect = Math.random() > 0.5;
+                    const displayDef = isCorrect ? wordObj.d : words[Math.floor(Math.random()*words.length)].d;
+                    q.text = `TRUE or FALSE: "${wordObj.w.toUpperCase()}" means "${displayDef}"?`;
+                    q.options = ["True", "False"];
+                    q.correct = isCorrect ? "True" : "False";
+                } else {
+                    q.text = `Complete the sentence: "The _____ behavior of the criminal made him famous in the city."`;
+                    q.options = shuffle([wordObj.w, ...getRandomWords(3, wordObj.w)]);
+                    q.correct = wordObj.w;
+                    // Adjust specific sentences based on words if needed, here we use wordObj.w as fallback
+                    if(wordObj.w === 'notorious') q.text = `Which word describes someone widely known for bad conduct?`;
+                }
+                quizData.push(q);
+            }
+        }
+
+        function getRandomDefs(count, exclude) {
+            return words.filter(x => x.d !== exclude).sort(() => 0.5 - Math.random()).slice(0, count).map(x => x.d);
+        }
+
+        function getRandomWords(count, exclude) {
+            return words.filter(x => x.w !== exclude).sort(() => 0.5 - Math.random()).slice(0, count).map(x => x.w);
+        }
+
+        function shuffle(arr) {
+            return arr.sort(() => 0.5 - Math.random());
+        }
+
+        function startQuiz() {
+            const fn = document.getElementById('input-fname').value.trim();
+            const ln = document.getElementById('input-lname').value.trim();
+            const cls = document.getElementById('input-class').value.trim();
+
+            if(!fn || !ln || !cls) {
+                return; // Simple validation
+            }
+
+            studentName = `${fn} ${ln}`;
+            studentClass = cls;
+
+            initQuizData();
+            showScreen('quiz-screen');
+            document.getElementById('prev-arrow').style.display = 'block';
+            document.getElementById('next-arrow').style.display = 'block';
+            renderQuestion();
+        }
+
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function renderQuestion() {
+            const q = quizData[currentQIndex];
+            document.getElementById('q-counter').innerText = `QUESTION ${String(currentQIndex + 1).padStart(2, '0')} / 25`;
+            document.getElementById('q-text').innerText = q.text;
+            
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            
+            q.options.forEach(opt => {
+                const div = document.createElement('div');
+                div.className = 'option';
+                if(userAnswers[currentQIndex] === opt) div.classList.add('selected');
+                div.innerText = opt;
+                div.onclick = () => selectOption(opt);
+                container.appendChild(div);
+            });
+        }
+
+        function selectOption(opt) {
+            const q = quizData[currentQIndex];
+            const prevAns = userAnswers[currentQIndex];
+            userAnswers[currentQIndex] = opt;
+            
+            if (opt === q.correct) {
+                playSound('sound-correct');
+            } else {
+                playSound('sound-wrong');
+            }
+
+            renderQuestion();
+            
+            if(!prevAns) {
+                setTimeout(() => moveQuestion(1), 600);
+            }
+        }
+
+        function playSound(id) {
+            const s = document.getElementById(id);
+            if(s) {
+                s.currentTime = 0;
+                s.play().catch(() => {});
+            }
+        }
+
+        function moveQuestion(dir) {
+            if(dir === 1 && currentQIndex === 24) {
+                finishQuiz();
+                return;
+            }
+            
+            currentQIndex += dir;
+            if(currentQIndex < 0) currentQIndex = 0;
+            if(currentQIndex > 24) currentQIndex = 24;
+            
+            renderQuestion();
+        }
+
+        function finishQuiz() {
+            document.getElementById('prev-arrow').style.display = 'none';
+            document.getElementById('next-arrow').style.display = 'none';
+            
+            let score = 0;
+            quizData.forEach((q, idx) => {
+                if(userAnswers[idx] === q.correct) score++;
+            });
+
+            const percent = Math.round((score / 25) * 100);
+            
+            showScreen('result-screen');
+            
+            document.getElementById('student-display').innerText = `${studentName.toUpperCase()} | ${studentClass.toUpperCase()}`;
+            document.getElementById('date-display').innerText = new Date().toLocaleDateString('en-US', { 
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+            });
+            document.getElementById('score-text').innerText = `SCORE: ${percent}%`;
+            
+            const rewardArea = document.getElementById('reward-area');
+            rewardArea.innerHTML = '';
+            if(percent >= 90) {
+                rewardArea.innerHTML = `
+                    <div class="trophy">🏆</div>
+                    <div class="remark">EXQUISITE WORK</div>
+                `;
+            }
+
+            setTimeout(() => {
+                document.getElementById('score-fill').style.width = percent + '%';
+            }, 300);
+        }
+
+        function toggleFS() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+        }
+
+        function captureScreen() {
+            const target = document.getElementById('app-container');
+            // Hide camera icon during capture
+            const camBtn = document.querySelector('.screen-capture-btn');
+            const fsBtn = document.querySelector('.fs-btn');
+            camBtn.style.visibility = 'hidden';
+            fsBtn.style.visibility = 'hidden';
+
+            html2canvas(target, { backgroundColor: '#0a0a0c' }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `Result_${studentName.replace(/\s+/g, '_')}.png`;
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+                camBtn.style.visibility = 'visible';
+                fsBtn.style.visibility = 'visible';
+            });
+        }
+    </script>
+</body>
+</html>
